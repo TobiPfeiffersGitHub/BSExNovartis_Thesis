@@ -10,7 +10,7 @@ def tick_loss(alpha, returns, var):
     for i in df.index:
         t_loss += (alpha * (df['Return'][i] - df['VaR'][i]) * (1 - df['Indicator'][i]) + 
                  (1 - alpha) * (df['VaR'][i] - df['Return'][i]) * df['Indicator'][i])
-    print(df)
+
     return t_loss
 
 
