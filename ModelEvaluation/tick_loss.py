@@ -16,23 +16,9 @@ def tick_loss(alpha, returns, var):
 
 
 def get_historical_quantiles(df, column_names, alpha):
-  """
-  Args:
-    df: A pandas DataFrame.
-    column_names: A list of column names.
 
-  Returns:
-    A pandas DataFrame with the column names and the 5th percentile.
-  """
 
   percentile_1 = df[column_names].quantile(alpha)
- #   percentile_5 = df[column_names].quantile(0.05)
- #   percentile_10 = df[column_names].quantile(0.10)
-
- #   percentile_table = pd.DataFrame({
- #     "1st Percentile": percentile_1,
- #     "5th Percentile": percentile_5,
- #     "10th Percentile": percentile_10
- #   })
+ 
 
   return percentile_1
