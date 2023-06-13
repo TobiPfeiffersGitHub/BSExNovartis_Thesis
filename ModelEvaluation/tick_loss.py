@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 def tick_loss(alpha, returns, var):
-    df = pd.DataFrame([returns, var], columns=['Return', 'VaR'])
+    df = pd.DataFrame({'Return': returns, 'VaR': var})
     df['Indicator'] = np.where(df['Return'] < df['VaR'], 1, 0)
     
     t_loss = 0
