@@ -15,11 +15,13 @@ class XGBQuantile(XGBRegressor):
     def __init__(self, quant_alpha=0.95, quant_delta=1.0, quant_thres=1.0, quant_var=1.0, base_score=0.5, booster='gbtree',
                  colsample_bylevel=1, colsample_bytree=1, gamma=0, learning_rate=0.1, max_delta_step=0, max_depth=3,
                  min_child_weight=1, missing=None, n_estimators=100, n_jobs=1, nthread=None, objective='reg:linear',
-                 random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None, silent=True, subsample=1):
+                 random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None, silent=True, 
+                 subsample=1):
         self.quant_alpha = quant_alpha
         self.quant_delta = quant_delta
         self.quant_thres = quant_thres
         self.quant_var = quant_var
+        self.seed = seed
         self.nthread = nthread  # Add nthread attribute here
 
         super().__init__(base_score=base_score, booster=booster, colsample_bylevel=colsample_bylevel,
@@ -27,7 +29,8 @@ class XGBQuantile(XGBRegressor):
                          max_delta_step=max_delta_step, max_depth=max_depth, min_child_weight=min_child_weight,
                          missing=missing, n_estimators=n_estimators, n_jobs=n_jobs, nthread=nthread,
                          objective=objective, random_state=random_state, reg_alpha=reg_alpha, reg_lambda=reg_lambda,
-                         scale_pos_weight=scale_pos_weight, seed=seed, silent=silent, subsample=subsample)
+                         scale_pos_weight=scale_pos_weight, seed=seed, silent=True, 
+                         subsample=subsample)
 
         self.test = None
 
