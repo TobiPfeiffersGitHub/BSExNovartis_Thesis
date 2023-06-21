@@ -19,7 +19,7 @@ import seaborn as sns
 def collect_prediction(X_train,y_train,X_test,y_test,estimator,alpha,model_name):
   estimator.fit(X_train,y_train)
   y_pred = estimator.predict(X_test)
-  print( "{model_name} alpha = {alpha:.2f},score = {score:.1f}".format(model_name=model_name, alpha=alpha , score= XGBQuantile.quantile_score(y_test, y_pred, alpha)) )
+  #print( "{model_name} alpha = {alpha:.2f},score = {score:.1f}".format(model_name=model_name, alpha=alpha , score= XGBQuantile.quantile_score(y_test, y_pred, alpha)) )
 
   return y_pred
 
@@ -95,9 +95,8 @@ class XGBQuantile(XGBRegressor):
 def tick_loss(alpha, returns, var):
     df = pd.DataFrame({'Return': returns, 'VaR': var})
     df['Indicator'] = np.where(df['Return'] < df['VaR'], 1, 0)
-    print(df)
-    t_loss = 0
 
+    t_loss = 0
     for i in df.index:
         t_loss += (alpha * (df['Return'][i] - df['VaR'][i]) * (1 - df['Indicator'][i]) +
                  (1 - alpha) * abs((df['VaR'][i] - df['Return'][i])) * df['Indicator'][i])
@@ -134,6 +133,7 @@ def get_model_performance(data, ticker, alpha, exclude, dates, horizon, params, 
     for d in dates:
         split_date = d
         train_df = dta[dta.Date <= split_date]
+        train_df = train_df.dropna() 
         test_df = dta[dta.Date > split_date]
         test_df = test_df.reset_index(drop=True)
 
@@ -162,7 +162,7 @@ def get_model_performance(data, ticker, alpha, exclude, dates, horizon, params, 
         y_upper = collect_prediction(X_train, y_train, X_test, y_test, estimator=best_regressor, alpha=0.95, model_name="Gradient Boosting")
 
         tickloss = tick_loss(alpha, y_test, y_lower)
-        print(tickloss)
+        #print(tickloss)
 
         if features == True:
            plot_feats(best_regressor, X_train)
