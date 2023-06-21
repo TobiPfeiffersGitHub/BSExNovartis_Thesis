@@ -122,7 +122,7 @@ def plot_feats(fitted_model, X):
     plt.show()
 
 
-def get_model_performance(data, ticker, alpha, dates, horizon, params, features = False):
+def get_model_performance(data, ticker, alpha, exclude, dates, horizon, params, features = False):
     """
     Args: data = data, ticker = ticker, alpha = risk, dates = string to split the dataframe, horizong,
     e.g., 3m, 9m, etc.. input just the number,  
@@ -137,10 +137,8 @@ def get_model_performance(data, ticker, alpha, dates, horizon, params, features 
         test_df = dta[dta.Date > split_date]
         test_df = test_df.reset_index(drop=True)
 
-        X_train = train_df.drop(columns=['NVS', 'AZN', 'BMY', 'JNJ', 'LLY', 'MRK', 'NVO', 'PFE', 'ROG', 'Date', 'ABBV', 'ABBV_lag1']#, 'ABBV_lag2']
-                                , axis=1)
-        X_test = test_df.drop(columns=['NVS', 'AZN', 'BMY', 'JNJ', 'LLY', 'MRK', 'NVO', 'PFE', 'ROG', 'Date', 'ABBV', 'ABBV_lag1']#, 'ABBV_lag2']
-                              , axis=1)
+        X_train = train_df.drop(columns=exclude, axis=1)
+        X_test = test_df.drop(columns=exclude, axis=1)
         X_test = X_test.iloc[0:horizon]
         y_train = train_df[ticker]
         y_test = test_df[ticker][0:horizon]
