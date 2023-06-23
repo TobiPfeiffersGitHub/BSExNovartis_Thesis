@@ -95,10 +95,11 @@ class XGBQuantile(XGBRegressor):
 def tick_loss(alpha, returns, var):
     df = pd.DataFrame({'Return': returns, 'VaR': var})
     df['Indicator'] = np.where(df['Return'] < df['VaR'], 1, 0)
-
+    print(df)
     t_loss = 0
+
     for i in df.index:
-        t_loss += (alpha * (df['Return'][i] - df['VaR'][i]) * (1 - df['Indicator'][i]) +
+      t_loss += (alpha * abs((df['Return'][i] - df['VaR'][i])) * (1 - df['Indicator'][i]) +
                  (1 - alpha) * abs((df['VaR'][i] - df['Return'][i])) * df['Indicator'][i])
 
     return t_loss
@@ -121,55 +122,47 @@ def plot_feats(fitted_model, X):
     plt.show()
 
 
-def get_model_performance(data, ticker, alpha, exclude, dates, horizon, params, features = False, gcv=False):
+def get_model_performance(data, ticker, alpha, exclude, dates, horizon): #,params, features=False, gcv=False)
     """
-    Args: data = data, ticker = ticker, alpha = risk, dates = string to split the dataframe, horizong,
-    e.g., 3m, 9m, etc.. input just the number,  
+    Args:
+    - data: data
+    - ticker: ticker
+    - alpha: risk
+    - exclude: list of columns to exclude
+    - dates: string to split the dataframe
+    - horizon: e.g., 3m, 9m, etc.. input just the number
+    - params: parameter grid for GridSearchCV
+    - features: flag to plot features (default: False)
+    - gcv: flag to enable grid search cross-validation (default: False)
     """
 
     t_loss = 0
     dta = data.copy()
 
     for d in dates:
-        split_date = d
-        train_df = dta[dta.Date <= split_date]
-        train_df = train_df.dropna() 
-        test_df = dta[dta.Date > split_date]
-        test_df = test_df.reset_index(drop=True)
+      split_date = d
+      train_df = dta[dta.Date <= split_date]
+      train_df = train_df.dropna()
+      test_df = dta[dta.Date > split_date]
+      test_df = test_df.reset_index(drop=True)
 
-        X_train = train_df.drop(columns=exclude, axis=1)
-        X_test = test_df.drop(columns=exclude, axis=1)
-        X_test = X_test.iloc[0:horizon]
-        y_train = train_df[ticker]
-        y_test = test_df[ticker][0:horizon]
+      X_train = train_df.drop(columns=exclude, axis=1)
+      X_test = test_df.drop(columns=exclude, axis=1)
+      X_test = X_test.iloc[0:horizon]
+      y_train = train_df[ticker]
+      y_test = test_df[ticker][0:horizon]
 
-        param_grid = params
+      regressor = GradientBoostingRegressor()
 
-        regressor = GradientBoostingRegressor()
+      #y_pred = regressor.fit(X_train, y_train).predict(X_test)
+      regressor.set_params(loss='quantile', alpha=0.05)
+      y_lower = collect_prediction(X_train, y_train, X_test, y_test, estimator=regressor, alpha=0.05, model_name="Gradient Boosting")
+      regressor.set_params(loss='quantile', alpha=0.95)
+      #y_upper = collect_prediction(X_train, y_train, X_test, y_test, estimator=regressor, alpha=0.95, model_name="Gradient Boosting")
+      tickloss = tick_loss(alpha, y_test, y_lower)
+      print(tickloss)
+      t_loss += tickloss
 
-        # Perform grid search cross-validation
-        grid_search = GridSearchCV(regressor, param_grid, scoring='neg_mean_squared_error', cv=3)
-        grid_search.fit(X_train, y_train)
-
-        best_regressor = grid_search.best_estimator_
-
-        y_pred = best_regressor.predict(X_test)
-
-        regressor.set_params(loss='quantile', alpha=0.05)
-        y_lower = collect_prediction(X_train, y_train, X_test, y_test, estimator=best_regressor, alpha=0.05, model_name="Gradient Boosting")
-
-        regressor.set_params(loss='quantile', alpha=0.95)
-        y_upper = collect_prediction(X_train, y_train, X_test, y_test, estimator=best_regressor, alpha=0.95, model_name="Gradient Boosting")
-
-        tickloss = tick_loss(alpha, y_test, y_lower)
-        #print(tickloss)
-
-        if features == True:
-           plot_feats(best_regressor, X_train)
-
-        t_loss += tickloss
-
-    combinations = 13-horizon
+    combinations = len(dates) - horizon
     t_loss = t_loss / combinations
     return t_loss
-
