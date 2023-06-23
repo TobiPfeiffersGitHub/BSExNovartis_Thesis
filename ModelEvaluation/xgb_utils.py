@@ -95,7 +95,7 @@ class XGBQuantile(XGBRegressor):
 def tick_loss(alpha, returns, var):
     df = pd.DataFrame({'Return': returns, 'VaR': var})
     df['Indicator'] = np.where(df['Return'] < df['VaR'], 1, 0)
-    print(df)
+    #print(df)
     t_loss = 0
 
     for i in df.index:
@@ -160,9 +160,9 @@ def get_model_performance(data, ticker, alpha, exclude, dates, horizon): #,param
       regressor.set_params(loss='quantile', alpha=0.95)
       #y_upper = collect_prediction(X_train, y_train, X_test, y_test, estimator=regressor, alpha=0.95, model_name="Gradient Boosting")
       tickloss = tick_loss(alpha, y_test, y_lower)
-      print(tickloss)
+      #print(tickloss)
       t_loss += tickloss
 
-    combinations = len(dates) - horizon
+    combinations = 13 - horizon
     t_loss = t_loss / combinations
     return t_loss
