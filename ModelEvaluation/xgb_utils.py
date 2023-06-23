@@ -121,7 +121,7 @@ def plot_feats(fitted_model, X):
     plt.show()
 
 
-def get_model_performance(data, ticker, alpha, exclude, dates, horizon, params, features = False):
+def get_model_performance(data, ticker, alpha, exclude, dates, horizon, params, features = False, gcv=False):
     """
     Args: data = data, ticker = ticker, alpha = risk, dates = string to split the dataframe, horizong,
     e.g., 3m, 9m, etc.. input just the number,  
