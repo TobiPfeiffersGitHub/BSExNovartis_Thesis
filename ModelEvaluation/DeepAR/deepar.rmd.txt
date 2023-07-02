@@ -1,0 +1,3 @@
+Unfortunately the packages required were not compatible with any of your local machines. We leveraged Google Colab and Kaggle notebooks because they were competible with the requirement and allowed us GPU access. Hence the paths in these notebook are set for our drive. 
+
+Moreover, the mxnet library stopped working after a few itteration of your loop. Therefore we had to split the tickers. We would have prefered to write more efficient code (e.g., a utils.py file with all functions) but the aforementioned problems made it impossible. However, sagemaker (the Amazon Machine Learning plattform) allows one to do so, albeit at a cost.
