@@ -1,7 +1,7 @@
 # BSE Master Thesis
 (In cooperation with the Novartis Digital Finance Hub)
 
-#### Authors: Lluïsa Rull Ferran, Maria Pintos Relat, Tobias Pfeiffer
+#### Authors: Lluïsa Rull Farran, Maria Pintos Relat, Tobias Pfeiffer
 
 ### Statemnet of Purpose:
 For our Master Thesis we partnered with the Novartis Digital Finance Hub to to model the downside risk of 10 pharma stocks. Our paper/project compares models from different field to investigate strength and weakness of models, and tries to find the best model for each stock in the portfolio.
@@ -28,7 +28,7 @@ this function penelises "violations" of the forecast more than inefficent foreca
 Braodly there are two ways to estimate VaR (which is esentially a quantile of the return distribution): uncoditional quantiles and conditional quantiles (conditional on covariates). We use the historical quantile (basically an order statistic) as a baseline. We then tried various models to improve upon the baseline:
 - **GARCH**: By estimating the conditional variance of the data series, GARCH models allow for the identification of time-varying volatility patterns, which are crucial for predicting future risks. It incorporates both autoregressive and moving average components to capture the persistence and volatility clustering observed in financial data.
 - **Quantile Regression (QR)**: QR estimates quantiles of a variable. Since Value-at-Risk can be viewed as a quantile, QR allows us to model Value-at-Risk conditional on the covariates. It works by minimising the aforementioned tick-loss function.
-- **XGBoost**: XGBoost is an alorithm that chains many descion trees together to make predictions. However, to get an estimate for Value-at-Risk we needed to alther the alogrithm and impose the tickloss as the cost function.
+- **XGBoost**: XGBoost is an alorithm that chains many desicion trees together to make predictions. However, to get an estimate for Value-at-Risk we needed to alther the alogrithm and impose the tickloss as the cost function.
 - **DeepAR**: DeepAR is a neural network architecture, designed for time series. It uses a neural network to parametrize a likelihood function. From this distribution it draws $n$ samples. We use the 5th percentile of this sample as an estimate for the  Value-at-risk.
 - **Ensemble**: We use an ensemble that upweights the tickloss of each model and returns a convex combination of the prediction vector from each model (excluding DeepAR).
 
