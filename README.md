@@ -34,8 +34,11 @@ Braodly there are two ways to estimate VaR (which is esentially a quantile of th
 
 
 ### Results
-
-
+None of the models consistently outperforms the baseline. However, some models perform well for some specifications:
+- **Garch**: Lower loss values indicate a closer match between the model's predicted volatility and the observed volatility. Among the companies mentioned, NVS, BMY, JNJ, MRK, NVO, and ABBV demonstrate a better fit to the volatility patterns, as indicated by lower loss values. On the other hand, ROG consistently shows higher loss values, suggesting that the model struggles to accurately capture its volatility patterns. AZN, LLY, and PFE have moderate loss values, indicating some challenges in capturing their volatility patterns, but not as pronounced as with ROG.
+- **Quantile Regression**: The analysis reveals that the performance varies across different tickers. AZN stands out as a relatively strong performer, particularly in shorter and medium-term time horizons. The overall model performs better than the baseline, but surprisingly, a naive model that only considers macroeconomic variables performs better for JNJ. Additionally, the Quantile Regression approach demonstrates superior performance in the short and medium-term compared to the long-term. These findings may be attributed to overfitting and multicollinearity issues. To enhance performance and mitigate multicollinearity problems, it may be beneficial to focus more on macroeconomic variables in the analysis.
+- **XGBoost**: The model shows strong performance in the short term and is particularly effective when applied to low volatility stocks (such as JNJ, BMY, and MRK). Furthermore, the results are closely aligned with the historical baseline, indicating a reliable and consistent performance.
+- **DeepAR**: 
 
 
 
